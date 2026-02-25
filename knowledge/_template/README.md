@@ -16,3 +16,16 @@ Fill in the markdown files below with your product's context. These are used by 
 | `key-learnings.md` | Recent experiment results, learnings, focus shifts |
 
 **Start with `strategy.md` and `customer-segments.md`** — these have the biggest impact on skill quality.
+
+## Examples
+
+See `../examples/` for fully worked-out examples using public data from big tech investor reports:
+
+| Company | Business Model | Source |
+|---------|---------------|--------|
+| **Spotify** | Subscription + ads, two-sided marketplace | SEC 10-K, Investor Day 2024 |
+| **Netflix** | Streaming + content, ad-tier expansion | SEC 10-K, Shareholder Letters |
+| **Shopify** | Commerce platform for SMBs + enterprise | SEC 10-K, Earnings Calls |
+| **Uber** | Multi-sided marketplace, multi-product | SEC 10-K, Investor Day |
+
+These are 100% publicly sourced — no proprietary data.

@@ -73,8 +73,9 @@ A self-serve Cursor setup for product managers: rules, skills, and agents that a
 The `knowledge/` directory holds strategy and domain context that agents and rules reference:
 
 - **_template/** — Copy this folder and rename it for your domain (e.g., `my-product/`)
+- **examples/** — Fully worked-out examples using public investor data from **Spotify, Netflix, Shopify, and Uber** (SEC 10-Ks, earnings calls, investor presentations)
 
-**How to customize:** Edit the markdown files in `knowledge/` to reflect your product, team, and current strategy. The strategy-reviewer agent and domain context rule use this context automatically.
+**How to customize:** Edit the markdown files in `knowledge/` to reflect your product, team, and current strategy. Browse `knowledge/examples/` to see how real companies' strategy, segments, and metrics map to the template. The strategy-reviewer agent and domain context rule use this context automatically.
 
 ---
 
