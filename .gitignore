@@ -1,0 +1,5 @@
+# Generated output (run setup to regenerate)
+output/
+
+# Local config overrides (optional - keep template in git)
+# config/my-config.yaml
