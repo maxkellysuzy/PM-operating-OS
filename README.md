@@ -103,7 +103,7 @@ If you prefer not to run the setup script:
 If you enabled the VOC analyzer:
 
 1. Configure **Slack MCP** in Cursor (Settings → MCP) with access to your VOC channel.
-2. In Cursor chat, say: *"Analyze VOC"*, *"Slack VOC analysis"*, or *"Expert call feedback"*.
+2. In Cursor chat, say: *"Analyze VOC"*, *"Slack VOC analysis"*, or *"Customer feedback"*.
 3. The agent searches your configured channel, classifies feedback by theme, and returns a PM report.
 
 See [agents/README.md](agents/README.md) for details.
