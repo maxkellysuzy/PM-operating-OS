@@ -35,8 +35,9 @@ A context graph for product teams — rules, skills, agents, and memory that ada
 
 ## Structure (after onboarding)
 
-| Folder | Purpose |
-|--------|---------|
+| Folder / file | Purpose |
+|---------------|---------|
+| **AGENTS.md** | Agent context and workspace memory for Cursor (PM Chief of Staff persona + Learned sections). Used only when this repo is open; see "How AGENTS.md works" at the bottom of the file. |
 | **.cursor/agents/** | Project-local onboarding agent (loaded when repo is open) |
 | **config/** | Your answers → `pm-os-config.yaml` |
 | **templates/** | Jinja2 templates for rules, agents, skills |

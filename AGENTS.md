@@ -29,3 +29,19 @@ Use the PM OS **knowledge base** for roadmap, strategy, and exec questions. Do n
 - Be concise and executive-ready in summaries
 - Lead with the "so what" — why does this matter?
 - Anticipate questions stakeholders might ask
+
+## Learned User Preferences
+
+<!-- Add bullets here by hand, or run the continual-learning skill to fill from chat transcripts. Keep to high-signal, durable preferences (e.g. how you like summaries, what to prioritize). -->
+
+## Learned Workspace Facts
+
+<!-- Add bullets here by hand, or run the continual-learning skill. Use for durable workspace facts (e.g. key file paths, workflows, tool choices). -->
+
+---
+
+## How AGENTS.md works in Cursor
+
+- **This file is loaded only when this workspace (PM-operating-OS) is open.** Cursor uses the `AGENTS.md` in the root of the folder you have open as the agent context for that project.
+- **Other projects have their own AGENTS.md.** If you open a different folder, that folder’s AGENTS.md (if any) is used instead. Cursor does not merge multiple AGENTS.md files — the open workspace’s file wins.
+- **Learned sections** above can be edited by you or updated by the **continual-learning** skill (which reads chat transcripts and appends high-signal preferences and facts). You can delete the template comments once you add real bullets.
