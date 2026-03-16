@@ -11,7 +11,8 @@ memory/
 ├── weekly-plans/       # Weekly planner outputs
 ├── strategy-reviews/   # Strategy reviewer scorecards
 ├── exec-updates/       # Executive status updates
-└── knowledge-snapshots/# Versioned snapshots of knowledge/ for drift detection
+├── knowledge-snapshots/# Versioned snapshots of knowledge/ for drift detection
+└── learning-log/       # Continual-learning run logs — what was extracted and where
 ```
 
 ## How It Works
@@ -21,6 +22,8 @@ memory/
 **Agents read here before every run.** Each agent checks its own history and relevant cross-agent memory to spot trends, track progress, and avoid starting from scratch.
 
 **Cross-agent references create the graph.** The weekly planner reads from feedback and decisions. The exec update generator reads from everything. The retrospective agent walks across all memory to surface patterns and drift.
+
+**Continual learning is the ingestion pipeline.** The `continual-learning` skill mines chat transcripts, classifies what it finds (decisions, exec updates, strategy shifts, feedback, preferences), writes structured entries to the appropriate `memory/` subdirectory, and updates `AGENTS.md` with curated preferences and facts. Run it periodically to keep the context graph current.
 
 ## Conventions
 

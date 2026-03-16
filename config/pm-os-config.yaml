@@ -109,6 +109,7 @@ skills:
   decision_logger: true
   what_if: true
   knowledge_updater: true
+  continual_learning: true
 
 # --- Part 10: Agents to include ---
 agents:

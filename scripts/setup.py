@@ -256,7 +256,7 @@ def main():
 
     # 5. Memory directory — create if it doesn't exist (context graph trajectory store)
     memory_dir = PROJECT_ROOT / "memory"
-    for subdir in ["decisions", "feedback", "weekly-plans", "strategy-reviews", "exec-updates", "knowledge-snapshots"]:
+    for subdir in ["decisions", "feedback", "weekly-plans", "strategy-reviews", "exec-updates", "knowledge-snapshots", "learning-log"]:
         (memory_dir / subdir).mkdir(parents=True, exist_ok=True)
     if not (memory_dir / "README.md").exists():
         print(f"  Memory directory exists at {memory_dir}")
@@ -300,6 +300,7 @@ def main():
         "decision_logger": "decision-logger",
         "what_if": "what-if",
         "knowledge_updater": "knowledge-updater",
+        "continual_learning": "continual-learning",
     }
     for cfg_key, folder_name in SKILL_MAP.items():
         if skills_cfg.get(cfg_key, False) and (skills_src / folder_name).exists():
