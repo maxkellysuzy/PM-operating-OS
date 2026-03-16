@@ -146,25 +146,33 @@ The `knowledge/` directory holds strategy and domain docs that agents and rules 
 
 ---
 
-## Part 4: Tools & Integrations (optional)
+## Part 4: Tools (for config)
 
-> **All 15+ skills work without any integrations.** This section is only needed if you want agents that pull live data from your tools.
+Which tools you use (Slack, Google Drive, Jira, Figma, etc.) is recorded in config so PM-OS can tailor agents and generate the right MCP config **if** you choose to connect MCPs. All 15+ skills work without any tool connections.
 
-### What are MCPs?
+---
 
-MCPs (Model Context Protocol servers) are plugins that connect Cursor to external tools. When you run setup, **PM-OS auto-generates** `.cursor/mcp.json` with configs for the MCPs you selected — you just add your API keys and you're done.
+## Part 5: MCPs — last step, optional
 
-**We set it up for you:**
-1. You pick which MCPs you want during onboarding
-2. Setup generates `.cursor/mcp.json` with the right config
-3. You replace placeholders (e.g. `YOUR_SLACK_BOT_TOKEN`) with your real keys
-4. Restart Cursor — done
+MCPs (Model Context Protocol servers) connect Cursor to external tools. **This step is last and optional.** You can:
+- Set up MCPs during onboarding (setup generates `.cursor/mcp.json`; you add keys and restart Cursor), or
+- **Skip** and connect MCPs anytime yourself via **Cursor Settings → Tools & MCP** or the **Cursor plugin marketplace**.
 
 See **[MCP_SETUP.md](MCP_SETUP.md)** for where to get each key.
 
-### Q6. Which MCPs do you want to connect?
+### MCPs added when you opt in
 
-Pick the ones relevant to your workflow. You can always add more later.
+When you choose to set up MCPs and have these tools enabled, setup adds the corresponding config to `.cursor/mcp.json`:
+
+| Tool(s) you enable | MCP added | What to do after setup |
+|--------------------|-----------|-------------------------|
+| **Jira** or **Confluence** | [Atlassian MCP Server](https://github.com/atlassian/atlassian-mcp-server) | On first use, complete OAuth in browser (or API token if enabled by your org). |
+| **Figma** | [Figma Context MCP](https://github.com/GLips/Figma-Context-MCP) (Framelink) + hosted Figma | Add your [Figma API token](https://www.figma.com/settings) as `YOUR_FIGMA_API_KEY` in `.cursor/mcp.json` for the Framelink server. |
+| **Gmail / Google Drive** (optional CLI) | — | For full Workspace CLI access (Gmail, Drive, Sheets, Calendar), optionally install [Google Workspace CLI](https://github.com/googleworkspace/cli): `npm install -g @googleworkspace/cli` then `gws auth setup`. See [MCP_SETUP.md](MCP_SETUP.md#google-workspace-cli-optional--not-an-mcp). |
+
+### Q6. Which MCPs do you want to connect? (optional — last step)
+
+Pick the ones relevant to your workflow. You can skip and connect MCPs yourself later via Cursor Settings → Tools & MCP or the Cursor plugin marketplace.
 
 #### Communication & Collaboration
 
@@ -264,7 +272,7 @@ For MCPs 2-3, 5-20: just install and authorize. No additional PM-OS config requi
 
 ---
 
-## Part 5: Skills & Agents
+## Part 6: Skills & Agents
 
 ### Q9. Which skills do you want?
 

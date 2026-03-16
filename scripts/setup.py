@@ -76,6 +76,8 @@ def render_template(env: Environment, name: str, ctx: dict) -> str:
 
 # MCP configs we can auto-generate (official npm packages or URL-based).
 # Other MCPs: user adds via Cursor Marketplace one-click.
+# Refs: https://github.com/googleworkspace/cli, https://github.com/GLips/Figma-Context-MCP,
+#       https://github.com/atlassian/atlassian-mcp-server
 MCP_CONFIGS = {
     "slack": {
         "command": "npx",
@@ -99,6 +101,17 @@ MCP_CONFIGS = {
         "url": "https://mcp.figma.com/mcp",
         "headers": {},
     },
+    # Figma Context MCP (Framelink) — layout/data for AI; requires API key. https://github.com/GLips/Figma-Context-MCP
+    "figma_developer": {
+        "command": "npx",
+        "args": ["-y", "figma-developer-mcp", "--stdio"],
+        "env": {"FIGMA_API_KEY": "YOUR_FIGMA_API_KEY"},
+    },
+    # Atlassian (Jira, Confluence, Compass) — OAuth in Cursor on first use. https://github.com/atlassian/atlassian-mcp-server
+    "atlassian": {
+        "url": "https://mcp.atlassian.com/v1/mcp",
+        "headers": {},
+    },
     "browser": {
         "command": "npx",
         "args": ["@playwright/mcp@latest"],
@@ -110,7 +123,9 @@ MCP_CONFIGS = {
 def generate_mcp_config(cfg: dict) -> None:
     """Generate .cursor/mcp.json from tools config. Users replace placeholders with real keys."""
     tools = cfg.get("tools", {})
-    if not any(tools.get(k) for k in MCP_CONFIGS if k in tools):
+    # Consider tool keys that map to MCPs plus derived: atlassian from jira/confluence, figma_developer from figma
+    tool_keys_with_mcp = set(tools.keys()) & set(MCP_CONFIGS.keys())
+    if not tool_keys_with_mcp and not (tools.get("jira") or tools.get("confluence")):
         return
 
     mcp_servers = {}
@@ -118,9 +133,16 @@ def generate_mcp_config(cfg: dict) -> None:
         if not enabled or tool_key not in MCP_CONFIGS:
             continue
         mcp_servers[tool_key] = MCP_CONFIGS[tool_key].copy()
-        # Deep copy env to avoid mutating template
         if "env" in mcp_servers[tool_key]:
             mcp_servers[tool_key]["env"] = dict(mcp_servers[tool_key]["env"])
+    # Atlassian MCP (Jira + Confluence): add when user enables jira or confluence
+    if (tools.get("jira") or tools.get("confluence")) and "atlassian" not in mcp_servers:
+        mcp_servers["atlassian"] = MCP_CONFIGS["atlassian"].copy()
+    # Figma Context MCP (Framelink): add when user enables figma (in addition to hosted Figma)
+    if tools.get("figma") and "figma_developer" not in mcp_servers:
+        mcp_servers["figma_developer"] = MCP_CONFIGS["figma_developer"].copy()
+        if "env" in mcp_servers["figma_developer"]:
+            mcp_servers["figma_developer"]["env"] = dict(mcp_servers["figma_developer"]["env"])
 
     if not mcp_servers:
         return

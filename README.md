@@ -14,7 +14,7 @@ A context graph for product teams — rules, skills, agents, and memory that ada
    cd PM-operating-OS
    ```
 
-2. **Run onboarding** — Open the repo in Cursor, then in chat say: **"onboard"** or **"PM-OS setup"**. Answer the questions; the agent writes config and runs setup automatically.
+2. **Run onboarding** — Open the repo in Cursor, then in chat say: **"onboard"** or **"PM-OS setup"**. Answer the questions; the agent writes config and runs setup automatically. MCPs (tool connections) are the **last step** and **optional** — you can skip and add them later via Cursor Settings → Tools & MCP or the Cursor plugin marketplace.
    - *Or* manually edit `config/pm-os-config.yaml` and run `./scripts/setup.sh --copy`
 
 3. **Restart Cursor** — Rules, skills, and agents will load from `~/.cursor/`.
@@ -150,7 +150,7 @@ If you prefer not to run the setup script:
 - **Slack, Google Drive, GitHub, Figma** — Setup auto-generates `.cursor/mcp.json` for these. You just add your API keys. See [MCP_SETUP.md](MCP_SETUP.md).
 - **Jira, Linear, Notion, etc.** — Add via Cursor Settings → Tools & MCP (one-click from Marketplace).
 
-> **15+ skills work immediately without any MCP.** Setup generates MCP config for you — you only need to add your keys. See [MCP_SETUP.md](MCP_SETUP.md).
+> **15+ skills work immediately without any MCP.** During onboarding, MCPs are the **last step** and **optional** — you can skip and connect them anytime yourself via Cursor Settings → Tools & MCP or the Cursor plugin marketplace. See [MCP_SETUP.md](MCP_SETUP.md).
 
 ---
 
