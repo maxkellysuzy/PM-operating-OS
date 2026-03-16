@@ -46,7 +46,7 @@ A PM operating system that **accelerates product work** by giving LLMs **shared 
 | **skills/** | Source for prd-writer, working-backwards, and expanded PM skills |
 | **knowledge/** | Strategy docs (personas, metrics, competitive landscape) — used by agents and rules |
 | **memory/** | Context graph trajectory store — decision traces, agent outputs, knowledge snapshots |
-| **agents/** | Agent docs (see agents/README.md) |
+| **docs/agents.md** | Agent documentation (all agents, trigger phrases, requirements) |
 
 ---
 
@@ -163,7 +163,7 @@ If you enabled the feedback analyzer:
 2. In Cursor chat, say: *"Analyze feedback"*, *"Slack feedback analysis"*, or *"Customer feedback"*.
 3. The agent searches your configured channel, classifies feedback by theme, and returns a PM report.
 
-See [agents/README.md](agents/README.md) for details.
+See [docs/agents.md](docs/agents.md) for details.
 
 ---
 

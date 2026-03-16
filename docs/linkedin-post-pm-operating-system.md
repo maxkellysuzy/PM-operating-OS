@@ -12,62 +12,33 @@ So we built something for ourselves. Then open-sourced it.
 
 The real shift is shared context across the team. Everyone's AI works from the same strategy, same priorities, same framing.
 
-Two examples from our team:
+Under the hood, the repo builds a **context graph** — strategy, segments, metrics, decisions, feedback, and plans all linked together. Every artifact you create adds a node. Every decision you log adds an edge. The graph is what lets the AI reason across your product, not just within a single prompt.
 
-1. Our director wrote the strategy doc. He dropped it into the knowledge layer. From there, an agent derived the key metrics. An analytics subagent took those metrics and built the dashboard — querying Databricks, formatting the views. Strategy → metrics → dashboard, same context end to end. No one re-typed anything.
+Three examples of the context graph in action:
 
-2. When I start a new PRD, I don't brief the AI on our customers or goals. It already has our segments, our strategic pillars, our positioning. I say "write a PRD for X" and it drafts with the right framing. I edit and push — not rewrite from scratch.
+1. Our director wrote the strategy doc and dropped it into the knowledge layer — one node. From there, an agent derived the key metrics — another node, linked to strategy. An analytics subagent took those metrics and built the dashboard, querying Databricks and formatting the views. Strategy → metrics → dashboard, three nodes, same graph, no re-typing.
 
-It's not magic. It's just context, structured well, loaded consistently.
+2. When I write a PRD, the AI already has the strategy, segments, and positioning from the graph. I say "write a PRD for X" and it drafts with the right framing — because the PRD skill traverses the same context graph the strategy lives in. I edit and push, not rewrite from scratch.
 
-The knowledge layer evolves into a context graph over time — decisions, feedback trends, strategy shifts accumulate. The more you use it, the more the AI knows what happened and why.
+3. Every Monday I say "plan my week." The agent walks the context graph — reads my goals, quarterly priorities, last week's decisions — then pulls my last 24 hours of Slack to see what's live. It produces a daily plan: P0s, P1s, P2s, with time blocks. Tuesday morning I say "plan my day" and it reshuffles based on what actually happened — new Slack threads, shifted priorities, completed work. The graph keeps the plan grounded in real commitments, not stale to-do lists.
+
+Each example builds on the same graph. The strategy doc feeds the PRD. The PRD informs the weekly plan. Decisions logged this quarter shape next quarter's strategy review. It compounds.
+
+It's not magic. It's just context, structured as a graph, loaded consistently.
 
 We open-sourced the whole thing. Clone the repo, open in Cursor, say "onboard." A few questions later you have rules, skills, agents, and a knowledge layer configured for your product. Tool connections (MCPs) are optional and come last — add them when you're ready.
 
-Here's what the repo looks like:
+Here's the structure (see snapshot below):
 
 ```
 PM-operating-OS/
-├── AGENTS.md                  # Your AI's persistent identity & context
-├── ONBOARDING.md              # Interactive setup guide
-├── MCP_SETUP.md               # Tool connections (Slack, Jira, Drive…)
-│
-├── knowledge/                 # The context layer
-│   ├── _template/             # Ready-to-fill templates
-│   │   ├── strategy.md
-│   │   ├── customer-segments.md
-│   │   ├── metrics-and-targets.md
-│   │   ├── value-proposition.md
-│   │   ├── competitive-landscape.md
-│   │   └── key-learnings.md
-│   └── examples/              # Pre-filled examples (Netflix, Spotify, Uber, Shopify)
-│
-├── skills/                    # PM skills baked in
-│   ├── prd-writer/
-│   ├── working-backwards/
-│   ├── brainstorming/
-│   ├── exec-communicator/
-│   ├── launch-post/
-│   ├── experiment-designer/
-│   ├── stakeholder-update/
-│   ├── decision-logger/
-│   ├── one-pager/
-│   ├── strategy-connector/
-│   ├── what-if/
-│   └── writing-clearly/
-│
-├── agents/                    # Autonomous PM agents
-├── memory/                    # Accumulated context over time
-│   ├── decisions/
-│   ├── feedback/
-│   ├── strategy-reviews/
-│   ├── exec-updates/
-│   └── weekly-plans/
-│
-├── templates/                 # Agent & rule templates
-├── output/                    # Generated artifacts land here
-├── config/                    # PM-OS configuration
-└── scripts/                   # Setup automation
+├── AGENTS.md          # AI identity & persistent context
+├── ONBOARDING.md      # Say "onboard" and go
+├── knowledge/         # Strategy, segments, metrics, decisions
+├── skills/            # PRDs, launch posts, working backwards, 15+ more
+├── agents/            # Autonomous PM agents
+├── memory/            # Context graph — compounds over time
+└── templates/         # Ready-to-use scaffolding
 ```
 
 If you're a PM using AI and tired of re-explaining context, this might save you real time.
