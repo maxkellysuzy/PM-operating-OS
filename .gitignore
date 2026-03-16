@@ -4,5 +4,9 @@ output/
 # MCP config — contains API keys after you fill in placeholders
 .cursor/mcp.json
 
+# User-specific session state and rules (not part of the repo template)
+.cursor/hooks/
+.cursor/rules/
+
 # Local config overrides (optional - keep template in git)
 # config/my-config.yaml

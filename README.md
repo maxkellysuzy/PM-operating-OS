@@ -1,6 +1,6 @@
 # PM Operating System
 
-A context graph for product teams — rules, skills, agents, and memory that adapt to your role, goals, and tools. Built on Cursor IDE.
+A PM operating system that **accelerates product work** by giving LLMs **shared context**. It connects to where you work (Slack, Drive, Jira, Figma, Databricks, etc. via MCPs), includes PM skills (PRDs, strategy, launch, exec updates), and maintains a living context of your strategy and decisions — evolving into a **context graph** that compounds over time. Built on Cursor IDE.
 
 **Created by [@Sach1ng](https://github.com/Sach1ng) and [@hardiktiwari](https://github.com/hardiktiwari)**
 

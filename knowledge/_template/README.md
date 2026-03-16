@@ -8,6 +8,7 @@ Fill in the markdown files below with your product's context. These are used by 
 
 | File | Purpose |
 |------|---------|
+| `key-resources.md` | **Entry point** — links to all knowledge files, external docs, and a decision-making checklist |
 | `strategy.md` | Strategic pillars, phased approach, quarterly priorities |
 | `customer-segments.md` | Who you serve — personas, segments, pain points |
 | `competitive-landscape.md` | Competitors, positioning, differentiation |
