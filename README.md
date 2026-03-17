@@ -2,7 +2,7 @@
 
 A PM operating system that **accelerates product work** by giving LLMs **shared context**. It connects to where you work (Slack, Drive, Jira, Figma, Databricks, etc. via MCPs), includes PM skills (PRDs, strategy, launch, exec updates), and maintains a living context of your strategy and decisions — evolving into a **context graph** that compounds over time. Built on Cursor IDE.
 
-**Created by [@Sach1ng](https://github.com/Sach1ng) and [@hardiktiwari](https://github.com/hardiktiwari)**
+**Created by [@Sach1ng](https://github.com/Sach1ng) ([Linkedin]([url](https://www.linkedin.com/in/sachinkgupta1/))) and [@hardiktiwari](https://github.com/hardiktiwari)** (Linkedin[https://www.linkedin.com/in/hardik-tiwari/](url))
 
 ---
 
