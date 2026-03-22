@@ -10,3 +10,6 @@ output/
 
 # Local config overrides (optional - keep template in git)
 # config/my-config.yaml
+
+# Personal config — contains your name, company, managers, goals; keep local
+config/pm-os-config.yaml
