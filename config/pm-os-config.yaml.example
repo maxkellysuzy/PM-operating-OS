@@ -1,0 +1,133 @@
+# PM Operating System — Configuration Example
+# Copy this file to config/pm-os-config.yaml and fill in your details.
+# Or run onboarding ("onboard" in Claude Code) to generate it automatically.
+
+# --- Part 1: Identity & Role ---
+identity:
+  name: "Your Name"
+  email: "you@company.com"
+  role: "Senior PM"                        # e.g. Principal PM, Group PM
+  product: "Your Product Name"             # e.g. Payments, Marketplace
+  product_type: "platform"                 # 0-1 / growth / platform / other
+  company: "Your Company"
+
+# --- Part 2: Stakeholders ---
+stakeholders:
+  managers: ["Manager Name"]
+  vip_senders: ["Manager Name", "Key Stakeholder"]
+  org_structure: "I report to [Manager], [Title]"
+
+# --- Part 3: Goals ---
+# Monthly or quarterly — adjust planning_cadence below
+planning_cadence: "monthly"               # monthly / quarterly
+current_sprint: "April 7 – May 4, 2026"  # update each sprint
+
+goals:
+  - name: "Goal 1 Name"
+    metric: "Key metric and target"
+    focus: "focus areas, comma separated"
+  - name: "Goal 2 Name"
+    metric: "Key metric and target"
+    focus: "focus areas, comma separated"
+
+# --- Part 4: Deprioritization ---
+deprioritize:
+  low_priority:
+    - "Item to push to backlog"
+  never_prioritize:
+    - "Item to always skip or delegate"
+
+# --- Part 5: Tools ---
+tools:
+  slack: false
+  gmail: false
+  microsoft_teams: false
+  google_drive: false
+  notion: false
+  confluence: false
+  jira: false
+  linear: false
+  asana: false
+  github: false
+  figma: false
+  browser: true
+  databricks: false
+  snowflake: false
+  postgresql: false
+  amplitude: false
+  mixpanel: false
+  salesforce: false
+  hubspot: false
+  zendesk: false
+  intercom: false
+
+# --- Part 6: Slack (if tools.slack: true) ---
+slack:
+  workspace_id: ""
+  feedback_channel: "#product-feedback"
+  feedback_channel_id: ""
+  dm_recipient_id: ""
+  channels: {}
+
+# --- Part 7: Google Drive (if tools.google_drive: true) ---
+google_drive:
+  monday_planning_doc_id: ""
+  daily_standup_doc_id: ""
+  pmo_sheet_url: ""
+
+# --- Part 8: Domain Context ---
+domain:
+  name: "Your Domain"
+  knowledge_folder: "my-product"          # folder under knowledge/
+  customer_segments:
+    - "Primary customer segment"
+    - "Secondary customer segment"
+  key_metrics:
+    - "Primary success metric"
+    - "Secondary success metric"
+  competitors:
+    - "Competitor A"
+    - "Competitor B"
+  strategic_pillars:
+    - "Strategic pillar 1"
+    - "Strategic pillar 2"
+  product_principles:
+    - "Product principle 1"
+    - "Product principle 2"
+  strategic_framing:
+    - "How to frame decisions and priorities"
+  knowledge_docs: []
+  strategy_doc_url: ""
+
+# --- Part 9: Skills to include ---
+skills:
+  prd_writer: true
+  working_backwards: true
+  action_item_prioritizer: true
+  pptx_creator: true
+  brainstorming: true
+  writing_clearly: true
+  strategy_connector: true
+  exec_communicator: true
+  experiment_designer: true
+  launch_readiness: true
+  launch_post: true
+  one_pager: true
+  stakeholder_update: true
+  meeting_to_actions: true
+  experiment_writeup: true
+  decision_logger: true
+  what_if: true
+  knowledge_updater: true
+  continual_learning: true
+
+# --- Part 10: Agents to include ---
+agents:
+  feedback_analyzer: true
+  weekly_planner: true
+  strategy_reviewer: true
+  exec_update_generator: true
+  retrospective: true
+
+# --- Part 11: PRD template ---
+prd_template: "generic"

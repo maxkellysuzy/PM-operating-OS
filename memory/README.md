@@ -23,7 +23,7 @@ memory/
 
 **Cross-agent references create the graph.** The weekly planner reads from feedback and decisions. The exec update generator reads from everything. The retrospective agent walks across all memory to surface patterns and drift.
 
-**Continual learning is the ingestion pipeline.** The `continual-learning` skill mines chat transcripts, classifies what it finds (decisions, exec updates, strategy shifts, feedback, preferences), writes structured entries to the appropriate `memory/` subdirectory, and updates `AGENTS.md` with curated preferences and facts. Run it periodically to keep the context graph current.
+**Continual learning is the ingestion pipeline.** The `continual-learning` skill mines chat transcripts, classifies what it finds (decisions, exec updates, strategy shifts, feedback, preferences), writes structured entries to the appropriate `memory/` subdirectory, and updates `CLAUDE.md` (and legacy `AGENTS.md` if present) with curated preferences and facts. Run it periodically to keep the context graph current.
 
 ## Conventions
 

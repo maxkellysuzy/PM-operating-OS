@@ -1,6 +1,6 @@
 # PM Operating System
 
-A PM operating system that **accelerates product work** by giving LLMs **shared context**. It connects to where you work (Slack, Drive, Jira, Figma, Databricks, etc. via MCPs), includes PM skills (PRDs, strategy, launch, exec updates), and maintains a living context of your strategy and decisions — evolving into a **context graph** that compounds over time. Built on Cursor IDE.
+A PM operating system that **accelerates product work** by giving LLMs **shared context**. It connects to where you work (Slack, Teams, Drive, Jira, Figma, Databricks, etc. via MCPs), includes PM skills (PRDs, strategy, launch, exec updates), and maintains a living context of your strategy and decisions — evolving into a **context graph** that compounds over time. Built for **Claude Code** (with legacy Cursor support).
 
 **Created by [@Sach1ng](https://github.com/Sach1ng) and [@hardiktiwari](https://github.com/hardiktiwari)**
 
@@ -14,10 +14,10 @@ A PM operating system that **accelerates product work** by giving LLMs **shared 
    cd PM-operating-OS
    ```
 
-2. **Run onboarding** — Open the repo in Cursor, then in chat say: **"onboard"** or **"PM-OS setup"**. Answer the questions; the agent writes config and runs setup automatically. MCPs (tool connections) are the **last step** and **optional** — you can skip and add them later via Cursor Settings → Tools & MCP or the Cursor plugin marketplace.
-   - *Or* manually edit `config/pm-os-config.yaml` and run `./scripts/setup.sh --copy`
+2. **Run onboarding** — Open the repo in Claude Code, then in chat say: **"onboard"** or **"PM-OS setup"**. Answer the questions; the agent writes config and runs setup automatically. MCPs (tool connections) are the **last step** and **optional** — you can skip and add them later via Claude Code's `/mcp` command or by editing `.mcp.json`.
+   - *Or* copy `config/pm-os-config.yaml.example` to `config/pm-os-config.yaml`, fill in your details, and run `./scripts/setup.sh`
 
-3. **Restart Cursor** — Rules, skills, and agents will load from `~/.cursor/`.
+3. **That's it** — `CLAUDE.md`, `.claude/agents/`, `.claude/skills/`, and `.mcp.json` load automatically when the workspace is open. (Add `--copy` to also deploy to `~/.claude/` for cross-project use.)
 
 ---
 
@@ -25,11 +25,12 @@ A PM operating system that **accelerates product work** by giving LLMs **shared 
 
 | Type | What it is | How it's customized |
 |------|------------|---------------------|
-| **Rules** | Persistent guidance Cursor applies | Your product, role, org, deprioritization signals |
-| **Skills** | On-demand PM capabilities | Goals, VIPs, PRD template, expanded PM workflows |
-| **Agents** | Specialized assistants (feedback analysis, planning, strategy review, exec updates, retrospective) | Slack channel, Google docs, goals |
-| **Knowledge layer** | Strategy and domain context (personas, metrics, competitive landscape) | Customize in `knowledge/` |
-| **Memory** | Trajectory store — accumulated agent outputs, decision traces, knowledge snapshots | Builds automatically as you use agents |
+| **CLAUDE.md** | Persistent project context Claude Code loads every session | Your product, role, org, deprioritization signals, domain context |
+| **Skills** (`.claude/skills/`) | On-demand PM capabilities | Goals, VIPs, PRD template, expanded PM workflows |
+| **Sub-agents** (`.claude/agents/`) | Specialized assistants (feedback analysis, planning, strategy review, exec updates, retrospective) | Slack/Teams channel, Google docs, goals |
+| **MCP servers** (`.mcp.json`) | Tool connections Claude Code loads on startup | Your selected tools (Slack, Teams, Drive, Jira, GitHub, Figma...) |
+| **Knowledge layer** (`knowledge/`) | Strategy and domain context (personas, metrics, competitive landscape) | Customize in `knowledge/` |
+| **Memory** (`memory/`) | Trajectory store — accumulated agent outputs, decision traces, knowledge snapshots | Builds automatically as you use agents |
 
 ---
 
@@ -37,26 +38,29 @@ A PM operating system that **accelerates product work** by giving LLMs **shared 
 
 | Folder / file | Purpose |
 |---------------|---------|
-| **AGENTS.md** | Agent context and workspace memory for Cursor (PM Chief of Staff persona + Learned sections). Used only when this repo is open; see "How AGENTS.md works" at the bottom of the file. |
-| **.cursor/agents/** | Project-local onboarding agent (loaded when repo is open) |
+| **CLAUDE.md** | Project context Claude Code loads automatically (PM Chief of Staff persona + domain context + Learned sections). Generated from `templates/CLAUDE.md.template` + `config/pm-os-config.yaml`. |
+| **.claude/agents/** | Sub-agents Claude Code invokes via the Agent tool (onboarding, company-researcher, feedback-analyzer, weekly-planner, strategy-reviewer, exec-update-generator, retrospective, etc.) |
+| **.claude/skills/** | Skills Claude Code invokes via the Skill tool (PRD writer, working-backwards, strategy-connector, what-if, decision-logger, etc.) |
+| **.mcp.json** | MCP server definitions (Slack, Teams, Drive, Jira, GitHub, Figma...). Claude Code loads on startup. |
 | **config/** | Your answers → `pm-os-config.yaml` |
-| **templates/** | Jinja2 templates for rules, agents, skills |
+| **templates/** | Jinja2 templates for CLAUDE.md, agents, skills |
 | **scripts/** | `setup.sh` / `setup.py` — generates personalized files |
-| **output/** | Generated rules, agents, skills (gitignored) |
-| **skills/** | Source for prd-writer, working-backwards, and expanded PM skills |
-| **knowledge/** | Strategy docs (personas, metrics, competitive landscape) — used by agents and rules |
+| **output/** | Staging area for generated files (gitignored) |
+| **skills/** | Source for prd-writer, working-backwards, and expanded PM skills (copied into `.claude/skills/` by setup) |
+| **knowledge/** | Strategy docs (personas, metrics, competitive landscape) — referenced by CLAUDE.md and agents |
 | **memory/** | Context graph trajectory store — decision traces, agent outputs, knowledge snapshots |
 | **docs/agents.md** | Agent documentation (all agents, trigger phrases, requirements) |
+| **AGENTS.md / .cursor/** | Legacy Cursor IDE files — kept for users who want to run PM-OS in Cursor alongside Claude Code. |
 
 ---
 
-## Rules, skills, and agents — what's the difference?
+## CLAUDE.md, skills, and agents — what's the difference?
 
 | | What it is | In plain terms |
 |---|------------|----------------|
-| **Rules** | Persistent guidance Cursor applies | How *you* work: standards, org context, prioritization |
-| **Skills** | On-demand "how-to" Cursor uses when the task fits | PM capabilities: PRDs, working backwards, prioritization |
-| **Agents** | Specialized assistants Cursor delegates to | Concrete tasks: feedback analysis, daily planning, strategy review |
+| **CLAUDE.md** | Always-on project context Claude Code loads every session | How *you* work: standards, org context, prioritization |
+| **Skills** | On-demand "how-to" Claude Code uses when the task fits | PM capabilities: PRDs, working backwards, prioritization |
+| **Sub-agents** | Specialized assistants Claude Code delegates to | Concrete tasks: feedback analysis, daily planning, strategy review |
 
 ---
 
@@ -136,31 +140,31 @@ Memory builds automatically as you use PM OS agents. To accelerate:
 If you prefer not to run the setup script:
 
 - Edit `config/pm-os-config.yaml` with your answers
-- Copy `skills/` subfolders to `~/.cursor/skills/`
-- Edit templates in `templates/` and copy outputs to `~/.cursor/` (rules, agents)
+- Edit `CLAUDE.md` directly with your product/role/goals
+- Skills already live in `skills/` — copy into `.claude/skills/` (or symlink) so Claude Code picks them up
 
 ---
 
 ## Requirements
 
 **Required:**
-- **Cursor IDE** with MCP support
+- **Claude Code** (CLI, desktop app, or IDE extension) — any edition with sub-agent + MCP support
 - **Python 3** (for setup script; `pip install -r requirements.txt`)
 
 **Optional (for agents that connect to external tools):**
-- **Slack, Google Drive, GitHub, Figma** — Setup auto-generates `.cursor/mcp.json` for these. You just add your API keys. See [MCP_SETUP.md](MCP_SETUP.md).
-- **Jira, Linear, Notion, etc.** — Add via Cursor Settings → Tools & MCP (one-click from Marketplace).
+- **Slack, Microsoft Teams, Google Drive, GitHub, Figma** — Setup auto-generates `.mcp.json` for these. You just add your API keys. See [MCP_SETUP.md](MCP_SETUP.md).
+- **Jira, Linear, Notion, etc.** — Add via Claude Code's `/mcp` command or by editing `.mcp.json` directly.
 
-> **15+ skills work immediately without any MCP.** During onboarding, MCPs are the **last step** and **optional** — you can skip and connect them anytime yourself via Cursor Settings → Tools & MCP or the Cursor plugin marketplace. See [MCP_SETUP.md](MCP_SETUP.md).
+> **15+ skills work immediately without any MCP.** During onboarding, MCPs are the **last step** and **optional** — you can skip and connect them anytime via Claude Code's `/mcp` command or by editing `.mcp.json`. See [MCP_SETUP.md](MCP_SETUP.md).
 
 ---
 
-## Feedback Analyzer (Slack)
+## Feedback Analyzer (Slack / Teams)
 
 If you enabled the feedback analyzer:
 
-1. Configure **Slack MCP** in Cursor (Settings → MCP) with access to your feedback channel.
-2. In Cursor chat, say: *"Analyze feedback"*, *"Slack feedback analysis"*, or *"Customer feedback"*.
+1. Configure the **Slack** or **Microsoft Teams** MCP in `.mcp.json` with access to your feedback channel.
+2. In Claude Code chat, say: *"Analyze feedback"*, *"Slack feedback analysis"*, or *"Customer feedback"*.
 3. The agent searches your configured channel, classifies feedback by theme, and returns a PM report.
 
 See [docs/agents.md](docs/agents.md) for details.
