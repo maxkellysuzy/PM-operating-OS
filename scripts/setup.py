@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-PM Operating System — Setup script
-Reads config/pm-os-config.yaml and generates personalized rules, agents, and skills.
-Also generates .cursor/mcp.json for selected MCPs — users just add their API keys.
+PM Operating System — Setup script (Claude Code edition)
+Reads config/pm-os-config.yaml and generates personalized CLAUDE.md, agents, and skills.
+Also generates .mcp.json for selected MCPs — users just add their API keys.
 """
 
 import argparse
@@ -75,9 +75,7 @@ def render_template(env: Environment, name: str, ctx: dict) -> str:
 
 
 # MCP configs we can auto-generate (official npm packages or URL-based).
-# Other MCPs: user adds via Cursor Marketplace one-click.
-# Refs: https://github.com/googleworkspace/cli, https://github.com/GLips/Figma-Context-MCP,
-#       https://github.com/atlassian/atlassian-mcp-server
+# Other MCPs: user adds via Claude Code's /mcp command or by editing .mcp.json.
 MCP_CONFIGS = {
     "slack": {
         "command": "npx",
@@ -101,13 +99,13 @@ MCP_CONFIGS = {
         "url": "https://mcp.figma.com/mcp",
         "headers": {},
     },
-    # Figma Context MCP (Framelink) — layout/data for AI; requires API key. https://github.com/GLips/Figma-Context-MCP
+    # Figma Context MCP (Framelink) — layout/data for AI; requires API key.
     "figma_developer": {
         "command": "npx",
         "args": ["-y", "figma-developer-mcp", "--stdio"],
         "env": {"FIGMA_API_KEY": "YOUR_FIGMA_API_KEY"},
     },
-    # Atlassian (Jira, Confluence, Compass) — OAuth in Cursor on first use. https://github.com/atlassian/atlassian-mcp-server
+    # Atlassian (Jira, Confluence, Compass) — OAuth on first use.
     "atlassian": {
         "url": "https://mcp.atlassian.com/v1/mcp",
         "headers": {},
@@ -121,9 +119,10 @@ MCP_CONFIGS = {
 
 
 def generate_mcp_config(cfg: dict) -> None:
-    """Generate .cursor/mcp.json from tools config. Users replace placeholders with real keys."""
+    """Generate .mcp.json at project root from tools config.
+    Users replace placeholders with real keys, then Claude Code loads them on startup.
+    """
     tools = cfg.get("tools", {})
-    # Consider tool keys that map to MCPs plus derived: atlassian from jira/confluence, figma_developer from figma
     tool_keys_with_mcp = set(tools.keys()) & set(MCP_CONFIGS.keys())
     if not tool_keys_with_mcp and not (tools.get("jira") or tools.get("confluence")):
         return
@@ -147,20 +146,18 @@ def generate_mcp_config(cfg: dict) -> None:
     if not mcp_servers:
         return
 
-    cursor_dir = PROJECT_ROOT / ".cursor"
-    cursor_dir.mkdir(exist_ok=True)
-    mcp_path = cursor_dir / "mcp.json"
+    mcp_path = PROJECT_ROOT / ".mcp.json"
     mcp_path.write_text(json.dumps({"mcpServers": mcp_servers}, indent=2), encoding="utf-8")
-    print(f"  Generated .cursor/mcp.json ({len(mcp_servers)} MCPs)")
-    print("  → Replace placeholders in .cursor/mcp.json with your API keys. See MCP_SETUP.md")
+    print(f"  Generated .mcp.json ({len(mcp_servers)} MCPs)")
+    print("  -> Replace placeholders in .mcp.json with your API keys. See MCP_SETUP.md")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="PM-OS setup: generate personalized Cursor config")
-    parser.add_argument("--copy", action="store_true", help="Copy output to Cursor dir (default)")
-    parser.add_argument("--symlink", action="store_true", help="Symlink output to Cursor dir")
-    parser.add_argument("--output-only", action="store_true", help="Only generate to output/, don't copy")
-    parser.add_argument("--cursor-path", default=None, help="Override Cursor path (e.g. ~/.cursor)")
+    parser = argparse.ArgumentParser(description="PM-OS setup: generate personalized Claude Code config")
+    parser.add_argument("--copy", action="store_true", help="Also deploy to ~/.claude (user-level, cross-project)")
+    parser.add_argument("--symlink", action="store_true", help="Symlink to ~/.claude instead of copy")
+    parser.add_argument("--output-only", action="store_true", help="Only generate to output/, don't write to project root or user dir")
+    parser.add_argument("--claude-path", default=None, help="Override user Claude dir (default ~/.claude)")
     args = parser.parse_args()
 
     cfg = load_config()
@@ -172,14 +169,16 @@ def main():
         mode = "output_only"
     elif args.symlink:
         mode = "symlink"
+    elif args.copy:
+        mode = "copy"
     else:
-        mode = args.copy or (cfg.get("output", {}).get("mode", "copy"))
+        mode = cfg.get("output", {}).get("mode", "project")  # default: write to project .claude/ only
 
-    cursor_path = Path(args.cursor_path or cfg.get("output", {}).get("cursor_path", "~/.cursor")).expanduser()
+    claude_path = Path(args.claude_path or cfg.get("output", {}).get("claude_path", "~/.claude")).expanduser()
     output_dir = PROJECT_ROOT / "output"
     output_dir.mkdir(exist_ok=True)
 
-    for d in ["rules", "agents", "skills"]:
+    for d in ["agents", "skills"]:
         (output_dir / d).mkdir(exist_ok=True)
         for f in (output_dir / d).iterdir():
             if f.is_file():
@@ -193,43 +192,36 @@ def main():
 
     ctx = build_template_context(cfg)
 
-    # 1. Chief-of-staff rule (always)
-    rule_content = render_template(env, "rules/chief-of-staff.mdc.template", ctx)
-    rule_name = f"{cfg.get('identity', {}).get('product', 'chief-of-staff').lower().replace(' ', '-')}-chief-of-staff.mdc"
-    (output_dir / "rules" / rule_name).write_text(rule_content, encoding="utf-8")
-    print(f"  Generated rules/{rule_name}")
+    # 1. Generate CLAUDE.md at project root (combines chief-of-staff + domain context)
+    claude_md_content = render_template(env, "CLAUDE.md.template", ctx)
+    claude_md_path = output_dir / "CLAUDE.md"
+    claude_md_path.write_text(claude_md_content, encoding="utf-8")
+    print(f"  Generated output/CLAUDE.md")
 
-    # 1b. Domain context rule (always)
-    domain_tpl = "rules/domain-context.mdc.template"
-    domain_name = cfg.get("domain", {}).get("name", "") or cfg.get("identity", {}).get("product", "domain")
-    domain_rule_filename = f"{domain_name.lower().replace(' ', '-')}-domain-context.mdc"
-    domain_rule_content = render_template(env, domain_tpl, ctx)
-    (output_dir / "rules" / domain_rule_filename).write_text(domain_rule_content, encoding="utf-8")
-    print(f"  Generated rules/{domain_rule_filename}")
+    # Write to project root too (the actual file Claude Code reads for this workspace)
+    if mode != "output_only":
+        (PROJECT_ROOT / "CLAUDE.md").write_text(claude_md_content, encoding="utf-8")
+        print(f"  Deployed CLAUDE.md to project root")
 
-    # 2. Onboarding agent (always — for re-runs)
-    onboarding_src = PROJECT_ROOT / ".cursor" / "agents" / "onboarding.md"
-    if onboarding_src.exists():
-        shutil.copy2(onboarding_src, output_dir / "agents" / "onboarding.md")
-        print(f"  Copied agents/onboarding.md")
-
-    # 2b. Company researcher agent (orchestrator) and subagents (always — for onboarding and ad-hoc use)
-    for agent_name in ("company-researcher", "company-strategy", "company-product-signals"):
-        agent_src = PROJECT_ROOT / ".cursor" / "agents" / f"{agent_name}.md"
+    # 2. Copy base agents (onboarding, company-researcher, subagents) to output/agents/
+    claude_agents_src = PROJECT_ROOT / ".claude" / "agents"
+    for agent_name in ("pm-os-onboarding", "company-researcher", "company-strategy", "company-product-signals"):
+        agent_src = claude_agents_src / f"{agent_name}.md"
         if agent_src.exists():
             shutil.copy2(agent_src, output_dir / "agents" / f"{agent_name}.md")
             print(f"  Copied agents/{agent_name}.md")
 
-    # 3. Feedback analyzer (if Slack + enabled)
-    if tools.get("slack") and agents_cfg.get("feedback_analyzer"):
+    # 3. Feedback analyzer (if Slack/Teams + enabled)
+    has_chat = tools.get("slack") or tools.get("teams")
+    if has_chat and agents_cfg.get("feedback_analyzer"):
         fa_content = render_template(env, "agents/feedback-analyzer.md.template", ctx)
         (output_dir / "agents" / "feedback-analyzer.md").write_text(fa_content, encoding="utf-8")
         print(f"  Generated agents/feedback-analyzer.md")
     else:
-        print(f"  Skipped agents/feedback-analyzer.md (slack={tools.get('slack')}, feedback_analyzer={agents_cfg.get('feedback_analyzer')})")
+        print(f"  Skipped agents/feedback-analyzer.md (chat={has_chat}, feedback_analyzer={agents_cfg.get('feedback_analyzer')})")
 
-    # 4. Weekly planner (if Google Drive + Slack + enabled)
-    if tools.get("slack") and tools.get("google_drive") and agents_cfg.get("weekly_planner"):
+    # 4. Weekly planner (if Google Drive + chat + enabled)
+    if has_chat and tools.get("google_drive") and agents_cfg.get("weekly_planner"):
         wp_content = render_template(env, "agents/weekly-planner.md.template", ctx)
         (output_dir / "agents" / "weekly-planner.md").write_text(wp_content, encoding="utf-8")
         print(f"  Generated agents/weekly-planner.md")
@@ -254,16 +246,13 @@ def main():
         (output_dir / "agents" / "retrospective.md").write_text(retro_content, encoding="utf-8")
         print(f"  Generated agents/retrospective.md")
 
-    # 5. Memory directory — create if it doesn't exist (context graph trajectory store)
+    # 5. Memory directory — create if it doesn't exist
     memory_dir = PROJECT_ROOT / "memory"
     for subdir in ["decisions", "feedback", "weekly-plans", "strategy-reviews", "exec-updates", "knowledge-snapshots", "learning-log"]:
         (memory_dir / subdir).mkdir(parents=True, exist_ok=True)
-    if not (memory_dir / "README.md").exists():
-        print(f"  Memory directory exists at {memory_dir}")
-    else:
-        print(f"  Memory directory ready at {memory_dir}")
+    print(f"  Memory directory ready at {memory_dir}")
 
-    # 7. Skills — copy from skills/ or generate from templates
+    # 6. Skills — copy from skills/ to output/skills/
     skills_src = PROJECT_ROOT / "skills"
     templates_dir = PROJECT_ROOT / "templates"
 
@@ -324,47 +313,63 @@ def main():
 
     print(f"\nOutput written to: {output_dir}")
 
-    # Always generate MCP config when tools are selected (project-level .cursor/mcp.json)
+    # Always generate MCP config when tools are selected (project-level .mcp.json)
     generate_mcp_config(cfg)
 
     if mode == "output_only":
-        print("\nNext: Copy or symlink from output/ to your Cursor directory.")
+        print("\nNext: Copy or symlink from output/ to your Claude Code directory, or open this workspace in Claude Code as-is.")
         return
 
-    # Copy or symlink to Cursor
-    cursor_rules = cursor_path / "rules"
-    cursor_agents = cursor_path / "agents"
-    cursor_skills = cursor_path / "skills"
-    for d in [cursor_rules, cursor_agents, cursor_skills]:
-        d.mkdir(parents=True, exist_ok=True)
+    # Always deploy generated agents/skills into project's .claude/ directory
+    project_claude = PROJECT_ROOT / ".claude"
+    project_agents = project_claude / "agents"
+    project_skills = project_claude / "skills"
+    project_agents.mkdir(parents=True, exist_ok=True)
+    project_skills.mkdir(parents=True, exist_ok=True)
 
-    def deploy(src: Path, dst_dir: Path, mode: str):
+    def deploy_files(src: Path, dst_dir: Path, link: bool):
         for f in src.iterdir():
             if f.is_file():
                 target = dst_dir / f.name
-                if target.exists():
+                if target.exists() or target.is_symlink():
                     target.unlink()
-                if mode == "symlink":
+                if link:
                     target.symlink_to(f.resolve())
                 else:
                     shutil.copy2(f, target)
 
-    deploy(output_dir / "rules", cursor_rules, mode)
-    deploy(output_dir / "agents", cursor_agents, mode)
-    # Skills are directories
-    for skill_dir in (output_dir / "skills").iterdir():
-        if skill_dir.is_dir():
-            dst = cursor_skills / skill_dir.name
-            if dst.exists():
-                shutil.rmtree(dst)
-            if mode == "symlink":
-                dst.symlink_to(skill_dir.resolve())
-            else:
-                shutil.copytree(skill_dir, dst)
-            print(f"  Deployed skills/{skill_dir.name}/")
+    def deploy_skills(src_skills: Path, dst_skills: Path, link: bool):
+        for skill_dir in src_skills.iterdir():
+            if skill_dir.is_dir():
+                dst = dst_skills / skill_dir.name
+                if dst.exists() or dst.is_symlink():
+                    if dst.is_symlink():
+                        dst.unlink()
+                    else:
+                        shutil.rmtree(dst)
+                if link:
+                    dst.symlink_to(skill_dir.resolve())
+                else:
+                    shutil.copytree(skill_dir, dst)
 
-    print(f"\nDeployed to {cursor_path} (mode={mode})")
-    print("Done. Restart Cursor or reload the window to pick up changes.")
+    # Deploy to project's own .claude/ (always)
+    deploy_files(output_dir / "agents", project_agents, link=False)
+    deploy_skills(output_dir / "skills", project_skills, link=False)
+    print(f"\nDeployed to project .claude/ (agents + skills)")
+
+    # Optionally deploy to user-level ~/.claude/ for cross-project availability
+    if mode in ("copy", "symlink"):
+        user_agents = claude_path / "agents"
+        user_skills = claude_path / "skills"
+        user_agents.mkdir(parents=True, exist_ok=True)
+        user_skills.mkdir(parents=True, exist_ok=True)
+
+        link = (mode == "symlink")
+        deploy_files(output_dir / "agents", user_agents, link=link)
+        deploy_skills(output_dir / "skills", user_skills, link=link)
+        print(f"Also deployed to {claude_path} (mode={mode})")
+
+    print("Done. Open this repo in Claude Code — CLAUDE.md, .claude/agents/, .claude/skills/, and .mcp.json will load automatically.")
 
 
 if __name__ == "__main__":

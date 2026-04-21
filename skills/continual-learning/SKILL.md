@@ -1,11 +1,11 @@
 ---
 name: continual-learning
-description: "Mine chat transcripts for decisions, exec updates, strategy shifts, feedback themes, and user preferences. Write structured entries to memory/, then update AGENTS.md with curated preferences and facts. The ingestion pipeline for the PM-OS context graph."
+description: "Mine chat transcripts for decisions, exec updates, strategy shifts, feedback themes, and user preferences. Write structured entries to memory/, then update CLAUDE.md with curated preferences and facts. The ingestion pipeline for the PM-OS context graph."
 ---
 
 # Continual Learning
 
-The ingestion pipeline for the PM-OS context graph. Reads chat transcripts, classifies what it finds, writes structured entries to `memory/`, and updates `AGENTS.md` with curated preferences and facts.
+The ingestion pipeline for the PM-OS context graph. Reads chat transcripts, classifies what it finds, writes structured entries to `memory/`, and updates `CLAUDE.md` with curated preferences and facts.
 
 ## When to Use
 
@@ -15,15 +15,15 @@ The ingestion pipeline for the PM-OS context graph. Reads chat transcripts, clas
 
 ## Inputs
 
-- **Transcript root:** `~/.cursor/projects/<workspace-slug>/agent-transcripts/`
-- **Existing memory:** `AGENTS.md` + `memory/` subdirectories
-- **Incremental index:** `.cursor/hooks/state/continual-learning-index.json`
+- **Transcript root:** `~/.claude/projects/<workspace-slug>/` (Claude Code transcripts). Legacy Cursor path: `~/.cursor/projects/<workspace-slug>/agent-transcripts/`.
+- **Existing memory:** `CLAUDE.md` + `memory/` subdirectories (legacy: also update `AGENTS.md` if present for Cursor users)
+- **Incremental index:** `.claude/state/continual-learning-index.json`
 
 ## Workflow
 
 ### 1. Load state
 
-1. Read existing `AGENTS.md`.
+1. Read existing `CLAUDE.md`.
 2. Load incremental index (if present).
 3. Discover transcript files. Process only:
    - new files not in the index, or
@@ -39,8 +39,8 @@ For each new/changed transcript, extract high-signal items and classify each int
 | **Exec update** | User drafted or discussed an executive status update, SLT summary, or program update | `memory/exec-updates/` |
 | **Strategy shift** | User discussed or changed strategic direction, pillars, positioning, or goals | `memory/strategy-reviews/` |
 | **Feedback insight** | User analyzed customer feedback, VOC themes, or support trends | `memory/feedback/` |
-| **User preference** | Recurring correction or stated broad rule about how the AI should behave | `AGENTS.md` → Learned User Preferences |
-| **Workspace fact** | Durable fact about the workspace, tools, file paths, or workflows | `AGENTS.md` → Learned Workspace Facts |
+| **User preference** | Recurring correction or stated broad rule about how the AI should behave | `CLAUDE.md` → Learned User Preferences |
+| **Workspace fact** | Durable fact about the workspace, tools, file paths, or workflows | `CLAUDE.md` → Learned Workspace Facts |
 
 **Skip:** one-off task instructions, transient details (branch names, commit hashes, temp errors), secrets/tokens/credentials, and anything not actionable in future sessions.
 
@@ -116,9 +116,9 @@ Also write a log entry to `memory/learning-log/YYYY-MM-DD.md`:
 - [category] → [path]: [1-line summary]
 ```
 
-### 4. Update AGENTS.md
+### 4. Update CLAUDE.md
 
-After writing to memory, update the Learned sections in `AGENTS.md`:
+After writing to memory, update the Learned sections in `CLAUDE.md`:
 
 - **Learned User Preferences** — recurring corrections, stated broad rules
 - **Learned Workspace Facts** — durable facts about workspace, tools, workflows
@@ -132,7 +132,7 @@ Rules:
 
 ### 5. Write back index
 
-Update `.cursor/hooks/state/continual-learning-index.json`:
+Update `.claude/state/continual-learning-index.json`:
 - Store latest mtimes for all processed files
 - Remove entries for files that no longer exist on disk
 

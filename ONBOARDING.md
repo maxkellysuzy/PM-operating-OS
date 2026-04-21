@@ -8,11 +8,11 @@ Welcome! This guide helps you customize the PM-OS for your role, team, and tools
 
 1. **Tell it about you** — Your role, product, goals, and domain context. This is where PM-OS gets its power.
 2. **Customize the knowledge layer** — Edit files in `knowledge/` to match your product, personas, and strategy.
-3. **Connect tools (optional)** — Hook up Slack and Google Drive MCPs for agents that pull live data.
-4. **Run the setup script** — `./scripts/setup.sh --copy` generates your personalized rules, agents, skills, and deploys them.
-5. **Restart Cursor** — Changes load from `~/.cursor/`.
+3. **Connect tools (optional)** — Hook up Slack/Teams and Google Drive MCPs for agents that pull live data.
+4. **Run the setup script** — `./scripts/setup.sh` generates your personalized CLAUDE.md, sub-agents, and skills into the project's `.claude/` directory. Add `--copy` to also deploy to `~/.claude/` for cross-project availability.
+5. **Reload Claude Code** — Open/refresh the workspace; CLAUDE.md, agents, skills, and MCPs load automatically.
 
-Run the onboarding agent in Cursor (say **"onboard"** or **"PM-OS setup"**) for interactive Q&A, or edit `config/pm-os-config.yaml` manually using the questions below.
+Run the onboarding agent in Claude Code (say **"onboard"** or **"PM-OS setup"**) for interactive Q&A, or edit `config/pm-os-config.yaml` manually using the questions below.
 
 ---
 
@@ -154,25 +154,25 @@ Which tools you use (Slack, Google Drive, Jira, Figma, etc.) is recorded in conf
 
 ## Part 5: MCPs — last step, optional
 
-MCPs (Model Context Protocol servers) connect Cursor to external tools. **This step is last and optional.** You can:
-- Set up MCPs during onboarding (setup generates `.cursor/mcp.json`; you add keys and restart Cursor), or
-- **Skip** and connect MCPs anytime yourself via **Cursor Settings → Tools & MCP** or the **Cursor plugin marketplace**.
+MCPs (Model Context Protocol servers) connect Claude Code to external tools. **This step is last and optional.** You can:
+- Set up MCPs during onboarding (setup generates `.mcp.json` at the project root; you add keys and restart Claude Code), or
+- **Skip** and connect MCPs anytime yourself via Claude Code's **`/mcp`** command or by editing `.mcp.json` directly.
 
 See **[MCP_SETUP.md](MCP_SETUP.md)** for where to get each key.
 
 ### MCPs added when you opt in
 
-When you choose to set up MCPs and have these tools enabled, setup adds the corresponding config to `.cursor/mcp.json`:
+When you choose to set up MCPs and have these tools enabled, setup adds the corresponding config to `.mcp.json`:
 
 | Tool(s) you enable | MCP added | What to do after setup |
 |--------------------|-----------|-------------------------|
 | **Jira** or **Confluence** | [Atlassian MCP Server](https://github.com/atlassian/atlassian-mcp-server) | On first use, complete OAuth in browser (or API token if enabled by your org). |
-| **Figma** | [Figma Context MCP](https://github.com/GLips/Figma-Context-MCP) (Framelink) + hosted Figma | Add your [Figma API token](https://www.figma.com/settings) as `YOUR_FIGMA_API_KEY` in `.cursor/mcp.json` for the Framelink server. |
+| **Figma** | [Figma Context MCP](https://github.com/GLips/Figma-Context-MCP) (Framelink) + hosted Figma | Add your [Figma API token](https://www.figma.com/settings) as `YOUR_FIGMA_API_KEY` in `.mcp.json` for the Framelink server. |
 | **Gmail / Google Drive** (optional CLI) | — | For full Workspace CLI access (Gmail, Drive, Sheets, Calendar), optionally install [Google Workspace CLI](https://github.com/googleworkspace/cli): `npm install -g @googleworkspace/cli` then `gws auth setup`. See [MCP_SETUP.md](MCP_SETUP.md#google-workspace-cli-optional--not-an-mcp). |
 
 ### Q6. Which MCPs do you want to connect? (optional — last step)
 
-Pick the ones relevant to your workflow. You can skip and connect MCPs yourself later via Cursor Settings → Tools & MCP or the Cursor plugin marketplace.
+Pick the ones relevant to your workflow. You can skip and connect MCPs yourself later via Claude Code's `/mcp` command or by editing `.mcp.json`.
 
 #### Communication & Collaboration
 
@@ -238,9 +238,9 @@ Pick the ones relevant to your workflow. You can skip and connect MCPs yourself 
 
 For each MCP you selected, follow the same pattern:
 
-1. **Install:** Cursor → Settings → MCP → find and add the MCP server
-2. **Authorize:** Connect your account (OAuth, API key, or token — depends on the MCP)
-3. **Verify:** Ask Cursor a test question to confirm it works (see examples below)
+1. **Install:** Run `/mcp` in Claude Code and add the server, or edit `.mcp.json` directly with the server entry.
+2. **Authorize:** Connect your account (OAuth, API key, or token — depends on the MCP).
+3. **Verify:** Ask Claude Code a test question to confirm it works (see examples below).
 
 #### Slack (1) — requires configuration
 
@@ -268,7 +268,7 @@ For each MCP you selected, follow the same pattern:
 
 #### All other MCPs — no PM-OS configuration needed
 
-For MCPs 2-3, 5-20: just install and authorize. No additional PM-OS config required — Cursor's agents will automatically use them when relevant. Set the corresponding flag to `true` in `config/pm-os-config.yaml` under `tools:`.
+For MCPs 2-3, 5-20: just install and authorize. No additional PM-OS config required — Claude Code's agents will automatically use them when relevant. Set the corresponding flag to `true` in `config/pm-os-config.yaml` under `tools:`.
 
 ---
 
@@ -368,8 +368,8 @@ Based on your answers, the setup script generates and deploys:
 
 ## Next steps
 
-1. **Fill config** — Run the onboarding agent in Cursor ("onboard" or "PM-OS setup") for Q&A; it writes config and runs setup automatically. Or edit `config/pm-os-config.yaml` and run `./scripts/setup.sh --copy`.
+1. **Fill config** — Run the onboarding agent in Claude Code ("onboard" or "PM-OS setup") for Q&A; it writes config and runs setup automatically. Or edit `config/pm-os-config.yaml` and run `./scripts/setup.sh`.
 2. **Customize knowledge** — Edit the files in `knowledge/` to match your product and strategy.
-3. **Restart Cursor** to pick up changes.
+3. **Reload Claude Code** to pick up changes (CLAUDE.md, `.claude/agents/`, `.claude/skills/`, and `.mcp.json` all load automatically when the workspace is open).
 
 Need help? See [README.md](README.md) for manual setup and structure details.
