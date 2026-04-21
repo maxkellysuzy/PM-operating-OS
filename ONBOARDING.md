@@ -23,9 +23,9 @@ PM-OS is structured as an operating system with four layers:
 | Layer | What it is | Folder |
 |-------|------------|--------|
 | **Knowledge (kernel)** | Strategy and domain context that every skill and agent draws from | `knowledge/` |
-| **Rules (system services)** | Always-on guidance — strategic framing, domain awareness | `templates/rules/` → `output/rules/` |
-| **Skills (applications)** | On-demand PM capabilities — PRDs, launch posts, experiments | `skills/` |
-| **Agents (daemons)** | Specialized assistants — feedback analysis, exec updates, strategy review | `templates/agents/` → `output/agents/` |
+| **CLAUDE.md (system services)** | Always-on guidance — strategic framing, domain awareness | `CLAUDE.md` |
+| **Skills (applications)** | On-demand PM capabilities — PRDs, launch posts, experiments | `.claude/skills/` |
+| **Agents (daemons)** | Specialized assistants — feedback analysis, exec updates, strategy review | `.claude/agents/` |
 
 ---
 
