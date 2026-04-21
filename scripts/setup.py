@@ -179,10 +179,10 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     for d in ["agents", "skills"]:
-        (output_dir / d).mkdir(exist_ok=True)
-        for f in (output_dir / d).iterdir():
-            if f.is_file():
-                f.unlink()
+        out = output_dir / d
+        if out.exists():
+            shutil.rmtree(out)
+        out.mkdir(parents=True)
 
     env = Environment(
         loader=FileSystemLoader(PROJECT_ROOT / "templates"),

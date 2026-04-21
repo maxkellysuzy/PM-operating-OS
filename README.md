@@ -15,7 +15,7 @@ A PM operating system that **accelerates product work** by giving LLMs **shared 
    ```
 
 2. **Run onboarding** — Open the repo in Claude Code, then in chat say: **"onboard"** or **"PM-OS setup"**. Answer the questions; the agent writes config and runs setup automatically. MCPs (tool connections) are the **last step** and **optional** — you can skip and add them later via Claude Code's `/mcp` command or by editing `.mcp.json`.
-   - *Or* manually edit `config/pm-os-config.yaml` and run `./scripts/setup.sh`
+   - *Or* copy `config/pm-os-config.yaml.example` to `config/pm-os-config.yaml`, fill in your details, and run `./scripts/setup.sh`
 
 3. **That's it** — `CLAUDE.md`, `.claude/agents/`, `.claude/skills/`, and `.mcp.json` load automatically when the workspace is open. (Add `--copy` to also deploy to `~/.claude/` for cross-project use.)
 
